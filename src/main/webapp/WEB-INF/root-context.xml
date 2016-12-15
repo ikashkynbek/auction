@@ -1,0 +1,31 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+
+    <import resource="spring-security.xml"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="com.auction.service"/>
+    <context:component-scan base-package="com.auction.socket"/>
+    <context:component-scan base-package="com.auction.utils"/>
+    <context:property-placeholder location="classpath*:app.properties"/>
+
+    <websocket:message-broker application-destination-prefix="/app">
+        <websocket:stomp-endpoint path="/auctionEndpoint">
+            <websocket:sockjs/>
+        </websocket:stomp-endpoint>
+        <websocket:simple-broker prefix="/topic"/>
+        <!--<websocket:simple-broker prefix="/topic/"/>-->
+    </websocket:message-broker>
+
+    <bean id="auctionDs" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="accessToUnderlyingConnectionAllowed" value="true"/>
+    </bean>
+</beans>

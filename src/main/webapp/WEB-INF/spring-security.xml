@@ -1,0 +1,35 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <sec:http auto-config="true" use-expressions="true">
+        <sec:intercept-url pattern="/auth" access="permitAll"/>
+        <sec:intercept-url pattern="/session" access="permitAll"/>
+        <sec:intercept-url pattern="/resources/**" access="permitAll"/>
+        <sec:form-login
+                login-page="/auth"
+                default-target-url="/"
+                authentication-failure-url="/auth"
+                username-parameter="username"
+                password-parameter="password"/>
+        <sec:logout logout-success-url="/auth" invalidate-session="true"/>
+        <sec:session-management invalid-session-url="/session"/>
+        <sec:csrf disabled="true"/>
+        <sec:intercept-url pattern="/**" access="isAuthenticated()"/>
+    </sec:http>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider>
+            <sec:user-service>
+                <sec:user name="is" password="123" authorities="ROLE_USER" />
+                <sec:user name="admin" password="123" authorities="ROLE_ADMIN" />
+            </sec:user-service>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
+
+</beans>

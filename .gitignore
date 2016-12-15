@@ -1,0 +1,22 @@
+# Created by https://www.gitignore.io
+
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# IntelliJ
+/out/
+
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+
+# exclude target folder
+/target
