@@ -5,7 +5,7 @@ import com.auction.model.Quote;
 import com.auction.model.QuoteType;
 import com.auction.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
+@EnableScheduling
 public class Generator {
 
     private static String[] merchants = {"sulpak", "tehnodom", "alser"};
@@ -39,7 +40,7 @@ public class Generator {
         }
     }
 
-    @Scheduled(fixedDelay=10000)
+//    @Scheduled(fixedDelay=60000)
     public void generateQuotes() {
 //        for (Auction auction : auctionService.listAuctions()) {
             Quote quote = generateQuote(1L);

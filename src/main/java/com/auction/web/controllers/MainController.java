@@ -1,4 +1,4 @@
-package com.auction.web;
+package com.auction.web.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

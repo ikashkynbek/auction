@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface QuoteService {
 
-    List<Quote> matchingQuotes(Long auctionId);
+    List<Quote> listQuotes(Long auctionId);
 
     List<Quote> matchingQuotes(Long auctionId, QuoteType type, Double price);
 

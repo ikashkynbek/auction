@@ -1,6 +1,6 @@
-auctionApp.controller('PortfolioController', function ($scope, $uibModal, tradeService) {
+auctionApp.controller('auctionController', function ($scope, $uibModal, tradeService) {
     $scope.notifications = [];
-    $scope.positions = {};
+    $scope.auctions = {};
 
     var processQuote = function (quote) {
         var existing = $scope.positions[quote.ticker];
@@ -19,39 +19,18 @@ auctionApp.controller('PortfolioController', function ($scope, $uibModal, tradeS
         $scope.notifications.unshift(message);
     };
 
-    var validateTrade = function (trade) {
-        if (isNaN(trade.shares) || (trade.shares < 1)) {
-            $scope.notifications.push("Trade Error: Invalid number of shares");
-            return false;
-        }
-        if ((trade.action === "Sell") && (trade.shares > $scope.positions[trade.ticker].shares)) {
-            $scope.notifications.push("Trade Error: Not enough shares");
-            return false;
-        }
-        return true;
-    };
-
-    $scope.openTradeModal = function (action, position) {
-        console.log(action);
+    $scope.openTradeModal = function (type, auction) {
         var modalInstance = $uibModal.open({
             templateUrl: 'tradeModal.html',
-            controller: 'TradeModalController',
+            controller: 'QuoteModalController',
             size: "sm",
             resolve: {
-                action: function() {return {name: action}},
-                position: position
+                type: function () {return {name: type}},
+                auction: auction
             }
         });
         modalInstance.result.then(function (result) {
-            console.log(result)
-            var trade = {
-                "action": result.action,
-                "ticker": result.position.ticker,
-                "shares": result.numberOfShares
-            };
-            if (validateTrade(trade)) {
-                tradeService.sendTradeOrder(trade);
-            }
+            tradeService.sendQuote(result.quote);
         });
     };
 
@@ -63,17 +42,13 @@ auctionApp.controller('PortfolioController', function ($scope, $uibModal, tradeS
         .then(function (username) {
                 $scope.username = username;
                 pushNotification("Trade results take a 2-3 second simulated delay. Notifications will appear!!!");
-                console.log("axaxaxa")
                 return tradeService.loadPositions();
             },
             function (error) {
                 pushNotification(error);
             })
-        .then(function (positions) {
-            console.log("positions", positions);
-            positions.forEach(function (pos) {
-                $scope.positions[pos.ticker] = pos;
-            });
+        .then(function (auctions) {
+            $scope.auctions = auctions;
             tradeService.fetchQuoteStream().then(null, null,
                 function (quote) {
                     processQuote(quote);
@@ -93,15 +68,13 @@ auctionApp.controller('PortfolioController', function ($scope, $uibModal, tradeS
 
 });
 
-auctionApp.controller('TradeModalController', function ($scope, $uibModalInstance, tradeService, action, position) {
-    $scope.action = action.name;
-    $scope.position = position;
-    $scope.numberOfShares = 0;
+auctionApp.controller('QuoteModalController', function ($scope, $uibModalInstance, tradeService, type, auction) {
+    $scope.quote = {type: type.name, auctionId: auction.id, qty: 1, price: 85000};
+    $scope.title = ($scope.quote.type == 'BID' ? "Buy " : "Sell ") + auction.productName;
+
     $scope.trade = function () {
         $uibModalInstance.close({
-            action: $scope.action,
-            position: position,
-            numberOfShares: $scope.numberOfShares
+            quote: $scope.quote
         });
     };
     $scope.cancel = function () {

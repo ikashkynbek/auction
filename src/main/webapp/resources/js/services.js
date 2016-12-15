@@ -68,7 +68,7 @@ auctionApp.factory('tradeService', function (stompClient, $q) {
             stompClient.disconnect();
         },
         loadPositions: function () {
-            return stompClient.subscribeSingle("/app/positions");
+            return stompClient.subscribeSingle("/app/auctions");
         },
         fetchQuoteStream: function () {
             return stompClient.subscribe("/topic/price.stock.*");
@@ -80,8 +80,8 @@ auctionApp.factory('tradeService', function (stompClient, $q) {
         fetchErrorStream: function () {
             return stompClient.subscribe("/user/topic/errors");
         },
-        sendTradeOrder: function (tradeOrder) {
-            return stompClient.send("/app/trade", {}, JSON.stringify(tradeOrder));
+        sendQuote: function (quote) {
+            return stompClient.send("/app/quote", {}, JSON.stringify(quote));
         }
     };
 });

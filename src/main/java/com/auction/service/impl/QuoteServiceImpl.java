@@ -19,8 +19,9 @@ import java.util.List;
 public class QuoteServiceImpl extends AbstractService implements QuoteService {
 
     @Override
-    public List<Quote> matchingQuotes(Long auctionId) {
-        return db.query("SELECT * FROM quotes WHERE  auction_id=?", new QuoteMapper(), auctionId);
+    public List<Quote> listQuotes(Long auctionId) {
+        return db.query("SELECT * FROM quotes WHERE auction_id=? AND status IN('CREATED', 'PARTIALLY_FILLED') ORDER BY price DESC",
+                new QuoteMapper(), auctionId);
     }
 
     @Override
