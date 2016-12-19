@@ -36,9 +36,9 @@ public class QuoteServiceImpl extends AbstractService implements QuoteService {
     public List<Quote> matchingQuotes(Long auctionId, QuoteType type, Double price) {
         String query = "SELECT * FROM quotes WHERE auction_id=? AND leaves_qty > 0 AND status IN('CREATED', 'PARTIALLY_FILLED') ";
         if (type.equals(QuoteType.BID)) {
-            query += "AND type='OFFER' AND price<=? ORDER BY price ASC";
+            query += "AND type='OFFER' AND price<=? ORDER BY price ASC, created ASC";
         } else {
-            query += "AND type='BID' AND price>=? ORDER BY price DESC";
+            query += "AND type='BID' AND price>=? ORDER BY price DESC, created ASC";
         }
         return db.query(query, new QuoteMapper(), auctionId, price);
     }

@@ -56,8 +56,7 @@ public class Generator {
         quote.setType(nextType());
         if (quote.getType().equals(QuoteType.OFFER)) {
             quote.setOwner(merchants[nextInt(0, merchants.length)]);
-//            quote.setQty(nextInt(1, 10));
-            quote.setQty(1);
+            quote.setQty(nextInt(1, 10));
             quote.setLeavesQty(quote.getQty());
         } else {
             quote.setOwner(customers[nextInt(0, customers.length)]);
