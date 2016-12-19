@@ -27,6 +27,14 @@ CREATE TABLE quotes (
   FOREIGN KEY (auction_id) REFERENCES auctions (id)
 );
 
+CREATE TABLE USERS (
+  id       SERIAL PRIMARY KEY,
+  login    VARCHAR(50) UNIQUE     NOT NULL,
+  password VARCHAR(500)           NOT NULL,
+  name     VARCHAR(50)            NOT NULL,
+  role     VARCHAR(200)           NOT NULL,
+  created  TIMESTAMP              NOT NULL DEFAULT NOW()
+);
 
 CREATE VIEW order_book AS
   SELECT

@@ -24,12 +24,7 @@
     </sec:http>
 
     <sec:authentication-manager alias="authenticationManager">
-        <sec:authentication-provider>
-            <sec:user-service>
-                <sec:user name="is" password="123" authorities="ROLE_USER" />
-                <sec:user name="admin" password="123" authorities="ROLE_ADMIN" />
-            </sec:user-service>
-        </sec:authentication-provider>
+        <sec:authentication-provider ref="authProvider"/>
     </sec:authentication-manager>
 
 </beans>
