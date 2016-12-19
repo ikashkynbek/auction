@@ -25,16 +25,16 @@
                 <div class="panel panel-default" ng-repeat="auction in auctions">
                     <div class="panel-heading">Auction for {{auction.productName}}</div>
                     <div class="panel-body">
-                        <div class="row" ng-class="q.type=='OFFER' ? 'bg-danger' : 'bg-success'" ng-repeat="q in auction.quotes">
+                        <div class="row" ng-class="q.type=='OFFER' ? 'bg-danger' : 'bg-success'" ng-repeat="q in auction.quotes | orderBy:'-price'">
                             <div class="col-md-4">
                                 <div ng-show="q.type == 'BID'">
-                                    {{q.leavesQty}}
+                                    {{q.qty}}
                                 </div>
                             </div>
                             <div class="col-md-4">{{q.price}}</div>
                             <div class="col-md-4">
                                 <div ng-show="q.type == 'OFFER'">
-                                    {{q.leavesQty}}
+                                    {{q.qty}}
                                 </div>
                             </div>
                         </div>

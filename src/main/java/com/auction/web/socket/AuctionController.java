@@ -35,7 +35,7 @@ public class AuctionController {
     public List<Auction> getAuctions(Principal principal) throws Exception {
         log.info("Auctions for " + principal.getName());
         List<Auction> auctions = auctionService.listAuctions();
-        auctions.forEach(a -> a.setQuotes(quoteService.listQuotes(a.getId())));
+        auctions.forEach(a -> a.setQuotes(quoteService.listQuotesGroup(a.getId())));
         return auctions;
     }
 

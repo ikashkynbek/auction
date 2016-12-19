@@ -25,6 +25,14 @@ public class QuoteServiceImpl extends AbstractService implements QuoteService {
     }
 
     @Override
+    public List<Quote> listQuotesGroup(Long auctionId) {
+        return db.query("SELECT sum(leaves_qty) AS qty, price, type FROM quotes " +
+                        "WHERE auction_id = ? AND status IN ('CREATED', 'PARTIALLY_FILLED') " +
+                        "GROUP BY price, type ORDER BY price DESC",
+                new QuoteGroupMapper(), auctionId);
+    }
+
+    @Override
     public List<Quote> matchingQuotes(Long auctionId, QuoteType type, Double price) {
         String query = "SELECT * FROM quotes WHERE auction_id=? AND leaves_qty > 0 AND status IN('CREATED', 'PARTIALLY_FILLED') ";
         if (type.equals(QuoteType.BID)) {
@@ -75,6 +83,17 @@ public class QuoteServiceImpl extends AbstractService implements QuoteService {
             quote.setPrice(rs.getDouble("price"));
             quote.setType(QuoteType.valueOf(rs.getString("type")));
             quote.setStatus(QuoteStatus.valueOf(rs.getString("status")));
+            return quote;
+        }
+    }
+
+    private static class QuoteGroupMapper implements RowMapper<Quote> {
+        @Override
+        public Quote mapRow(ResultSet rs, int i) throws SQLException {
+            Quote quote = new Quote();
+            quote.setQty(rs.getInt("qty"));
+            quote.setPrice(rs.getDouble("price"));
+            quote.setType(QuoteType.valueOf(rs.getString("type")));
             return quote;
         }
     }

@@ -2,10 +2,12 @@ package com.auction.utils;
 
 import com.auction.model.Order;
 import com.auction.model.Quote;
+import com.auction.model.QuoteMsg;
 import com.auction.model.QuoteType;
 import com.auction.service.OrderService;
 import com.auction.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,9 +25,13 @@ public class MatchingService {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private MessageSendingOperations<String> messaging;
+
     public void matching(Quote newQuote) {
 
         Long newQuoteId = quoteService.createQuote(newQuote);
+        sendMsg(QuoteMsg.Action.ADD, newQuote.getQty(), newQuote);
         List<Quote> quotes = quoteService.matchingQuotes(newQuote.getAuctionId(), newQuote.getType(), newQuote.getPrice());
 
         for (Quote oldQuote : quotes) {
@@ -53,8 +59,20 @@ public class MatchingService {
             quoteService.updateQuote(oldQuote.getId(), leavesQtyOld, leavesQtyOld > 0 ? PARTIALLY_FILLED : FILLED);
             quoteService.updateQuote(newQuoteId, leavesQtyNew, leavesQtyNew > 0 ? PARTIALLY_FILLED : FILLED);
             newQuote.setLeavesQty(leavesQtyNew);
+            sendMsg(QuoteMsg.Action.REMOVE, 1, oldQuote);
+            sendMsg(QuoteMsg.Action.REMOVE, 1, newQuote);
 
             if (leavesQtyNew == 0) break;
         }
+    }
+
+    private void sendMsg (QuoteMsg.Action action, Integer qty, Quote q) {
+        QuoteMsg msg = new QuoteMsg();
+        msg.setAction(action);
+        msg.setAuctionId(q.getAuctionId());
+        msg.setQty(qty);
+        msg.setPrice(q.getPrice());
+        msg.setType(q.getType());
+        messaging.convertAndSend("/topic/quote", msg);
     }
 }

@@ -7,7 +7,7 @@ auctionApp.factory('stompClient', function ($q) {
             }
             else {
                 stompClient = Stomp.over(new SockJS(url));
-                console.log(stompClient)
+                stompClient.debug = null
             }
         },
         connect: function () {
@@ -43,7 +43,6 @@ auctionApp.factory('stompClient', function ($q) {
                     reject("STOMP client not created");
                 } else {
                     stompClient.subscribe(destination, function (message) {
-                        console.log("message", message);
                         resolve(JSON.parse(message.body));
                     });
                 }
@@ -58,7 +57,6 @@ auctionApp.factory('stompClient', function ($q) {
 auctionApp.factory('tradeService', function (stompClient, $q) {
     return {
         connect: function (url) {
-            console.log("connecting", url)
             stompClient.init(url);
             return stompClient.connect().then(function (frame) {
                 return frame.headers['user-name'];
@@ -67,17 +65,13 @@ auctionApp.factory('tradeService', function (stompClient, $q) {
         disconnect: function () {
             stompClient.disconnect();
         },
-        loadPositions: function () {
+        loadAuctions: function () {
             return stompClient.subscribeSingle("/app/auctions");
         },
-        fetchQuoteStream: function () {
-            return stompClient.subscribe("/topic/price.stock.*");
+        fetchQuotes: function () {
+            return stompClient.subscribe("/topic/quote");
         },
-        fetchPositionUpdateStream: function () {
-            console.log("load fetchPositionUpdateStream")
-            return stompClient.subscribe("/user/topic/position-updates");
-        },
-        fetchErrorStream: function () {
+        fetchErrors: function () {
             return stompClient.subscribe("/user/topic/errors");
         },
         sendQuote: function (quote) {

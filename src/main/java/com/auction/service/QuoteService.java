@@ -13,6 +13,8 @@ public interface QuoteService {
 
     List<Quote> listQuotes(Long auctionId);
 
+    List<Quote> listQuotesGroup(Long auctionId);
+
     List<Quote> matchingQuotes(Long auctionId, QuoteType type, Double price);
 
     Long createQuote(Quote quote);

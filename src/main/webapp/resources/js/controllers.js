@@ -1,20 +1,20 @@
-auctionApp.controller('auctionController', function ($scope, $uibModal, tradeService) {
+auctionApp.controller('auctionController', function ($scope, $uibModal, tradeService, $filter) {
     $scope.notifications = [];
     $scope.auctions = {};
 
-    var processQuote = function (quote) {
-        var existing = $scope.positions[quote.ticker];
-        if (existing) {
-            existing.change = quote.price - existing.price;
-            existing.price = quote.price;
+    var updateQuotes = function (quote) {
+        var auction = $filter('filter')($scope.auctions, {id: quote.auctionId})[0];
+        var oldQuote = $filter('filter')(auction.quotes, {price: quote.price})[0];
+        if (oldQuote != null) {
+            oldQuote.qty = quote.action == 'ADD' ? (oldQuote.qty + quote.qty) : (oldQuote.qty - quote.qty);
+            if (oldQuote.qty <= 0) {
+                auction.quotes.splice(auction.quotes.indexOf(oldQuote),1);
+            }
+        } else {
+            auction.quotes.push(quote);
         }
     };
-    var udpatePosition = function (position) {
-        var existing = $scope.positions[position.ticker];
-        if (existing) {
-            existing.shares = position.shares;
-        }
-    };
+
     var pushNotification = function (message) {
         $scope.notifications.unshift(message);
     };
@@ -25,7 +25,9 @@ auctionApp.controller('auctionController', function ($scope, $uibModal, tradeSer
             controller: 'QuoteModalController',
             size: "sm",
             resolve: {
-                type: function () {return {name: type}},
+                type: function () {
+                    return {name: type}
+                },
                 auction: auction
             }
         });
@@ -42,30 +44,24 @@ auctionApp.controller('auctionController', function ($scope, $uibModal, tradeSer
         .then(function (username) {
                 $scope.username = username;
                 pushNotification("Trade results take a 2-3 second simulated delay. Notifications will appear!!!");
-                return tradeService.loadPositions();
+                return tradeService.loadAuctions();
             },
             function (error) {
                 pushNotification(error);
             })
         .then(function (auctions) {
             $scope.auctions = auctions;
-            tradeService.fetchQuoteStream().then(null, null,
+            tradeService.fetchQuotes().then(null, null,
                 function (quote) {
-                    processQuote(quote);
+                    updateQuotes(quote);
                 }
             );
-            tradeService.fetchPositionUpdateStream().then(null, null,
-                function (position) {
-                    udpatePosition(position);
-                }
-            );
-            tradeService.fetchErrorStream().then(null, null,
+            tradeService.fetchErrors().then(null, null,
                 function (error) {
                     pushNotification(error);
                 }
             );
         });
-
 });
 
 auctionApp.controller('QuoteModalController', function ($scope, $uibModalInstance, tradeService, type, auction) {

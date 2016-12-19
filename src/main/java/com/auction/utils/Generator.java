@@ -6,6 +6,7 @@ import com.auction.model.QuoteType;
 import com.auction.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -40,13 +41,13 @@ public class Generator {
         }
     }
 
-//    @Scheduled(fixedDelay=60000)
+    @Scheduled(fixedDelay=100)
     public void generateQuotes() {
-//        for (Auction auction : auctionService.listAuctions()) {
-            Quote quote = generateQuote(1L);
+        for (Auction auction : auctionService.listAuctions()) {
+            Quote quote = generateQuote(auction.getId());
             System.out.println(quote);
             matchingService.matching(quote);
-//        }
+        }
     }
 
     public Quote generateQuote(Long audionId) {
@@ -55,14 +56,15 @@ public class Generator {
         quote.setType(nextType());
         if (quote.getType().equals(QuoteType.OFFER)) {
             quote.setOwner(merchants[nextInt(0, merchants.length)]);
-            quote.setQty(nextInt(1, 10));
+//            quote.setQty(nextInt(1, 10));
+            quote.setQty(1);
             quote.setLeavesQty(quote.getQty());
         } else {
             quote.setOwner(customers[nextInt(0, customers.length)]);
             quote.setQty(1);
             quote.setLeavesQty(1);
         }
-        quote.setPrice((double) nextInt(80000, 100000));
+        quote.setPrice((double) nextInt(97000, 97010));
         return quote;
     }
 
