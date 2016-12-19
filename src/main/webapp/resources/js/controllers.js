@@ -8,7 +8,7 @@ auctionApp.controller('auctionController', function ($scope, $uibModal, tradeSer
         if (oldQuote != null) {
             oldQuote.qty = quote.action == 'ADD' ? (oldQuote.qty + quote.qty) : (oldQuote.qty - quote.qty);
             if (oldQuote.qty <= 0) {
-                auction.quotes.splice(auction.quotes.indexOf(oldQuote),1);
+                auction.quotes.splice(auction.quotes.indexOf(oldQuote), 1);
             }
         } else {
             auction.quotes.push(quote);
@@ -40,10 +40,8 @@ auctionApp.controller('auctionController', function ($scope, $uibModal, tradeSer
         tradeService.disconnect();
     };
 
-    tradeService.connect("/auctionEndpoint")
-        .then(function (username) {
-                $scope.username = username;
-                pushNotification("Trade results take a 2-3 second simulated delay. Notifications will appear!!!");
+    tradeService.connect("/auction-endpoint")
+        .then(function () {
                 return tradeService.loadAuctions();
             },
             function (error) {

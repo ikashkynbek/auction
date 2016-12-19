@@ -41,7 +41,7 @@ public class Generator {
         }
     }
 
-    @Scheduled(fixedDelay=100)
+    @Scheduled(fixedDelay=60000)
     public void generateQuotes() {
         for (Auction auction : auctionService.listAuctions()) {
             Quote quote = generateQuote(auction.getId());

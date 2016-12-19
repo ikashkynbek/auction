@@ -14,11 +14,10 @@
     <context:property-placeholder location="classpath*:app.properties"/>
 
     <websocket:message-broker application-destination-prefix="/app">
-        <websocket:stomp-endpoint path="/auctionEndpoint">
+        <websocket:stomp-endpoint path="/auction-endpoint">
             <websocket:sockjs/>
         </websocket:stomp-endpoint>
         <websocket:simple-broker prefix="/topic"/>
-        <!--<websocket:simple-broker prefix="/topic/"/>-->
     </websocket:message-broker>
 
     <bean id="auctionDs" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

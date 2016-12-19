@@ -7,8 +7,8 @@ auctionApp.factory('stompClient', function ($q) {
             }
             else {
                 stompClient = Stomp.over(new SockJS(url));
-                stompClient.debug = null
             }
+            stompClient.debug = null
         },
         connect: function () {
             return $q(function (resolve, reject) {
@@ -58,9 +58,7 @@ auctionApp.factory('tradeService', function (stompClient, $q) {
     return {
         connect: function (url) {
             stompClient.init(url);
-            return stompClient.connect().then(function (frame) {
-                return frame.headers['user-name'];
-            });
+            return stompClient.connect();
         },
         disconnect: function () {
             stompClient.disconnect();
