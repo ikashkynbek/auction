@@ -16,7 +16,7 @@
 package com.auction.service;
 
 
-import com.auction.model.Auction;
+import com.auction.model.*;
 
 import java.util.List;
 
@@ -28,4 +28,17 @@ public interface AuctionService {
 
 	Long createAuction(Auction auction);
 
+	List<Order> listOrders();
+
+	Long createOrder(Order order);
+
+	List<Quote> listQuotes(Long auctionId);
+
+	List<Quote> listQuotesGroup(Long auctionId);
+
+	List<Quote> matchingQuotes(Long auctionId, QuoteType type, Double price);
+
+	Long createQuote(Quote quote);
+
+	void updateQuote(Long id, Integer leavesQty, QuoteStatus status);
 }

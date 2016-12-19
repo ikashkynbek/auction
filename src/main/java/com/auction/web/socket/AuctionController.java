@@ -3,7 +3,6 @@ package com.auction.web.socket;
 import com.auction.model.Auction;
 import com.auction.model.Quote;
 import com.auction.service.AuctionService;
-import com.auction.service.QuoteService;
 import com.auction.utils.MatchingService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,13 @@ public class AuctionController {
     private AuctionService auctionService;
 
     @Autowired
-    private QuoteService quoteService;
-
-    @Autowired
     private MatchingService matchingService;
 
     @SubscribeMapping("/auctions")
     public List<Auction> getAuctions(Principal principal) throws Exception {
         log.info("Auctions for " + principal.getName());
         List<Auction> auctions = auctionService.listAuctions();
-        auctions.forEach(a -> a.setQuotes(quoteService.listQuotesGroup(a.getId())));
+        auctions.forEach(a -> a.setQuotes(auctionService.listQuotesGroup(a.getId())));
         return auctions;
     }
 
