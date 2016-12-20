@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.auction.utils.SecurityUtil.validatePassword;
+import static com.auction.utils.Utils.validatePassword;
 
 @Component
 public class AuthProvider implements AuthenticationProvider {

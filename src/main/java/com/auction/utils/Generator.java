@@ -10,14 +10,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.security.SecureRandom;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 @EnableScheduling
 public class Generator {
 
+    public static final SecureRandom RANDOM = new SecureRandom();
+    public static final SecureRandom RANDOM2 = new SecureRandom();
     private static String[] merchants = {"sulpak", "tehnodom", "alser"};
     private static String[] customers = {"islam", "max", "andrey", "vitaliy"};
 
@@ -56,26 +57,55 @@ public class Generator {
         quote.setType(nextType());
         if (quote.getType().equals(QuoteType.OFFER)) {
             quote.setOwner(merchants[nextInt(0, merchants.length)]);
-            quote.setQty(nextInt(1, 10));
+            quote.setQty(nextInt(1, 6));
             quote.setLeavesQty(quote.getQty());
         } else {
             quote.setOwner(customers[nextInt(0, customers.length)]);
             quote.setQty(1);
             quote.setLeavesQty(1);
         }
-        quote.setPrice((double) nextInt(97000, 97010));
+        quote.setPrice(nextDouble(90, 100));
         return quote;
     }
 
-    private static double nexDouble(double min, double max) {
-        return ThreadLocalRandom.current().nextDouble(min, max);
+    private static int nextInt(int from, int to) {
+        return (int) nextFloat(from, to);
     }
 
-    private static int nextInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(min, max);
+    private static double nextDouble(double from, double to) {
+        return round(nextFloat(from, to));
+    }
+
+    private static double nextFloat(double from, double to) {
+        if (to <= from) return -1;
+        double mean = 1.0 * (to + from) / 2;
+        double dev = (to - from) / 10;
+        double val = RANDOM.nextGaussian() * dev + mean;
+        if (val > to) val = to;
+        if (val < from) val = from;
+        return val;
     }
 
     private static QuoteType nextType() {
-        return QuoteType.values()[new Random().nextInt(QuoteType.values().length)];
+        if (RANDOM2.nextInt(10) > 6) { return QuoteType.OFFER; }
+        else { return QuoteType.BID; }
     }
+
+    private static double round(double value) {
+        long factor = (long) Math.pow(10, 2);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
+//    public static void main(String[] args) {
+//        List<QuoteType> list = new ArrayList<>();
+//        for (int i =0; i<=10; i++) {
+//            list.add(nextType());
+//        }
+//        Collections.sort(list);
+//        for (int i =0; i<=10; i++) {
+//            System.out.println(list.get(i));
+//        }
+//    }
 }

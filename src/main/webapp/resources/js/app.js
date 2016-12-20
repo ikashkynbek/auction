@@ -1,28 +1,33 @@
-var auctionApp = angular.module('auction', ['ui.bootstrap']);
+var auctionApp = angular.module('auction', ['ngRoute', 'ui.bootstrap']);
 
-var sockJsProtocols = [];  
-// var sockJsProtocols =  ["xhr-streaming", "xhr-polling"];  
+var sockJsProtocols = [];
+// var sockJsProtocols =  ["xhr-streaming", "xhr-polling"];
+var staticFilesPath = "/pages";
+var context = "";
 
-auctionApp.filter('percent', function ($filter) {
-    return function (input, total) {
-        return $filter('number')(input / total * 100, 1) + '%';
-    };
-})
-    .filter('totalPortfolioShares', function () {
-        return function (positions) {
-            var total = 0;
-            for (var ticker in positions) {
-                total += positions[ticker].shares;
+var principalUrl = context + "/principal";
+
+var ordersUrl = "/orders";
+var ordersListUrl = ordersUrl + "/list";
+
+var auctionsPage = staticFilesPath + "/auctions.html";
+var ordersPage = staticFilesPath + "/orders.html";
+
+auctionApp.config(function ($routeProvider, $httpProvider, $locationProvider) {
+
+    $routeProvider.when('/orders', {
+        templateUrl: ordersPage,
+        controller: 'orders',
+        "check": function (accessService, $location) {
+            if (!accessService.check("ADMIN")) {
+                $location.path('/');
             }
-            return total;
-        };
-    })
-    .filter('totalPortfolioValue', function () {
-        return function (positions) {
-            var total = 0;
-            for (var ticker in positions) {
-                total += positions[ticker].price * positions[ticker].shares;
-            }
-            return total;
-        };
-    });
+        }
+    }).when('/', {
+        templateUrl: auctionsPage,
+        controller: 'auction'
+    }).otherwise('/');
+
+    $locationProvider.html5Mode(true);
+    $httpProvider.interceptors.push("sessionInjector");
+});

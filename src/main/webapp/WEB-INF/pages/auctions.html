@@ -1,0 +1,32 @@
+<div class="container" ng-controller="auction">
+    <div class="col-md-4">
+        <div class="panel panel-default" ng-repeat="auction in auctions">
+            <div class="panel-heading">Auction for {{auction.productName}}</div>
+            <div class="panel-body">
+                <div class="row" ng-class="q.type=='OFFER' ? 'bg-danger' : 'bg-success'" ng-repeat="q in auction.quotes | orderBy:'-price'">
+                    <div class="col-md-4">
+                        <div ng-show="q.type == 'BID'">
+                            {{q.qty}}
+                        </div>
+                    </div>
+                    <div class="col-md-4">{{q.price}}</div>
+                    <div class="col-md-4">
+                        <div ng-show="q.type == 'OFFER'">
+                            {{q.qty}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-success" ng-click="openTradeModal('BID', auction)">Buy</button>
+                <button class="btn btn-danger" ng-click="openTradeModal('OFFER', auction)">Sell</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="alert alert-warning">
+    <h5>Notifications</h5>
+    <ul>
+        <li ng-repeat="notification in notifications">{{notification}}</li>
+    </ul>
+</div>

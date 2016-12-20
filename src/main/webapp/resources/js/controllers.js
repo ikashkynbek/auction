@@ -1,4 +1,4 @@
-auctionApp.controller('auctionController', function ($scope, $uibModal, tradeService, $filter) {
+auctionApp.controller('auction', function ($scope, $uibModal, tradeService, $filter) {
     $scope.notifications = [];
     $scope.auctions = {};
 
@@ -60,6 +60,12 @@ auctionApp.controller('auctionController', function ($scope, $uibModal, tradeSer
                 }
             );
         });
+});
+
+auctionApp.controller('orders', function ($scope, $http) {
+    $http.get(ordersListUrl).success(function (response) {
+        $scope.orders = response.data;
+    });
 });
 
 auctionApp.controller('QuoteModalController', function ($scope, $uibModalInstance, tradeService, type, auction) {

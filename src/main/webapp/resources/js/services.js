@@ -1,3 +1,65 @@
+auctionApp.run(function (authService) {
+    $.ajax(principalUrl, {async: false}).success(function (data) {
+        authService.setPrincipal(data);
+    });
+});
+
+auctionApp.service('authService', function ($rootScope) {
+    var principal = {};
+
+    this.setPrincipal = function (principal1) {
+        principal = principal1;
+        $rootScope.principal = principal;
+    };
+    this.getPrincipal = function () {
+        return principal;
+    };
+});
+
+auctionApp.directive('restrict', function (authService, accessService) {
+    return {
+        restrict: 'A',
+        scope: false,
+        compile: function (element, attr) {
+            if (!accessService.check(attr.access)) {
+                element.children().remove();
+                element.remove();
+            }
+        }
+    }
+});
+
+auctionApp.service('accessService', function (authService) {
+    this.check = function (accessList) {
+        var hasAccess = false;
+        var user = authService.getPrincipal();
+        if (typeof user.authorities !== "undefined") {
+            var role = user.authorities[0].authority;
+            var attributes = accessList.split(" ");
+            for (var i in attributes) {
+                if (role == attributes[i]) {
+                    hasAccess = true;
+                }
+            }
+        }
+        return hasAccess;
+    };
+});
+
+auctionApp.factory("sessionInjector", function ($q, $window, $location) {
+    return {
+        'responseError': function (rejection) {
+            if (rejection.status === 401) {
+                $location.path('/auth');
+                $window.location.reload();
+            } else {
+                return $q.reject(rejection);
+            }
+        }
+    };
+});
+
+
 auctionApp.factory('stompClient', function ($q) {
     var stompClient;
     return {
@@ -9,6 +71,7 @@ auctionApp.factory('stompClient', function ($q) {
                 stompClient = Stomp.over(new SockJS(url));
             }
             stompClient.debug = null
+            console.log("connected")
         },
         connect: function () {
             return $q(function (resolve, reject) {
