@@ -1,6 +1,7 @@
 package com.auction.utils;
 
 import com.auction.model.Auction;
+import com.auction.model.AuctionStatus;
 import com.auction.model.Quote;
 import com.auction.model.QuoteType;
 import com.auction.service.AuctionService;
@@ -34,10 +35,12 @@ public class Generator {
         if (auctions.isEmpty()) {
             Auction a1 = new Auction();
             a1.setProductName("LED LG 43LF630V Black");
+            a1.setStatus(AuctionStatus.ACTIVE);
             auctionService.createAuction(a1);
 
             Auction a2 = new Auction();
             a2.setProductName("Samsung WF8590NLW9DY White");
+            a2.setStatus(AuctionStatus.ACTIVE);
             auctionService.createAuction(a2);
         }
     }

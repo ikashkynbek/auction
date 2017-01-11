@@ -59,11 +59,12 @@ public class AuctionServiceImpl extends AbstractService implements AuctionServic
 
     @Override
     public Long createAuction(Auction auction) {
-        String insert = "INSERT INTO auctions(product_name) VALUES (?)";
+        String insert = "INSERT INTO auctions(product_name, status) VALUES (?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         db.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(insert, new String[]{"id"});
             ps.setString(1, auction.getProductName());
+            ps.setString(2, auction.getStatus().name());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();

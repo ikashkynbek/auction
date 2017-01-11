@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Auction</title>
+</head>
+<body>
+    <table class="table table-striped">
+        <thead>
+            <th>NEW AUCTION</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Product name:</td>
+                <td><input ng-model="productName"></td>
+            </tr>
+            <tr>
+                <td>Start date:</td>
+                <td><input type="date" ng-model="startDate"></td>
+            </tr>
+            <tr>
+                <td>End Date:</td>
+                <td><input type="date" ng-model="endDate"></td>
+            </tr>
+            <tr>
+                <td>Status:</td>
+                <td>
+                    <select ng-model="status" ng-options="item as item.text for item in statuses"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <a class="btn btn-default navbar-btn" ng-click="createAuction()">Create new auction</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

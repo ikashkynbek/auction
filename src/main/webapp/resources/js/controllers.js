@@ -81,3 +81,24 @@ auctionApp.controller('QuoteModalController', function ($scope, $uibModalInstanc
         $uibModalInstance.dismiss('cancel');
     };
 });
+
+auctionApp.controller('newAuction', function ($scope, $http) {
+
+    $scope.statuses = [{name:'ACTIVE', text: 'Active'}, {name:'INACTIVE', text: 'Inactive'}];
+    $scope.status = $scope.statuses[0];
+    
+    $scope.createAuction = function () {
+        $scope.auction = { productName: $scope.productName,
+                           startDate: $scope.startDate,
+                           endDate: $scope.endDate,
+                           status: $scope.status.name };
+
+        $http.post(
+            "/auctions/newAuction", $scope.auction
+        ).success(function () {
+            console.log("New auction created");
+        }).error(function () {
+            cosole.log("Error creating new auction");
+        });
+    }
+});

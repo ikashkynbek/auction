@@ -1,6 +1,9 @@
 CREATE TABLE auctions (
   id           SERIAL PRIMARY KEY,
   product_name VARCHAR(500) NOT NULL,
+  start_date   TIMESTAMP,
+  end_date     TIMESTAMP,
+  status       VARCHAR(100) NOT NULL,
   created      TIMESTAMP    NOT NULL DEFAULT NOW()
 );
 

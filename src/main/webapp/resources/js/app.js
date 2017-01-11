@@ -12,6 +12,7 @@ var ordersListUrl = ordersUrl + "/list";
 
 var auctionsPage = staticFilesPath + "/auctions.html";
 var ordersPage = staticFilesPath + "/orders.html";
+var newAuctionPage = staticFilesPath + "/newauction.html";
 
 auctionApp.config(function ($routeProvider, $httpProvider, $locationProvider) {
 
@@ -26,6 +27,9 @@ auctionApp.config(function ($routeProvider, $httpProvider, $locationProvider) {
     }).when('/', {
         templateUrl: auctionsPage,
         controller: 'auction'
+    }).when('/newauction', {
+        templateUrl: newAuctionPage,
+        controller: 'newAuction'
     }).otherwise('/');
 
     $locationProvider.html5Mode(true);
