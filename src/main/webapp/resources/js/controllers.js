@@ -82,7 +82,7 @@ auctionApp.controller('QuoteModalController', function ($scope, $uibModalInstanc
     };
 });
 
-auctionApp.controller('newAuction', function ($scope, $http) {
+auctionApp.controller('newAuction', function ($scope, $http, $uibModal) {
 
     $scope.statuses = [{name:'ACTIVE', text: 'Active'}, {name:'INACTIVE', text: 'Inactive'}];
     $scope.status = $scope.statuses[0];
@@ -96,9 +96,39 @@ auctionApp.controller('newAuction', function ($scope, $http) {
         $http.post(
             "/auctions/newAuction", $scope.auction
         ).success(function () {
-            console.log("New auction created");
+            console.log("New auction created successfully");
+            $scope.showModal("New auction created successfully");
+            $scope.clearForm();
         }).error(function () {
-            cosole.log("Error creating new auction");
+            console.log("Error creating new auction");
+            $scope.showModal("Error creating new auction");
         });
     }
+
+    $scope.showModal = function (message) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'newAuctionModal.html',
+            controller: 'newAuctionModalController',
+            resolve: {
+                message: function () {
+                return {message: message}
+            }
+            }
+        });
+    }
+    $scope.clearForm = function () {
+        $scope.productName = null;
+        $scope.startDate = null;
+        $scope.endDate = null;
+        $scope.status = null;
+    }
+});
+
+auctionApp.controller('newAuctionModalController', function ($scope, $uibModalInstance, message) {
+    $scope.message = message.message;
+
+    $scope.ok = function () {
+        $uibModalInstance.close();
+    };
+
 });
