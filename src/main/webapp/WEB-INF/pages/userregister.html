@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User register page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/css/userregister.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <form class="form-register">
+            <table class="table table-striped">
+                <thead>
+                <th colspan="2">Please, fill the form to register</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" class="input-block-level" placeholder="Name" id="username"></td>
+                </tr>
+                <tr>
+                    <td>Login:</td>
+                    <td><input type="text" class="input-block-level" placeholder="Login" id="login"></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="text" class="input-block-level" placeholder="Password" id="password"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button class="btn btn-primary" id="register">Register</button></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <a href="=auth">Go back to login page</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script>
+        $('#register').click(function (event) {
+            //alert("fafdafa");
+            event.preventDefault();
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var login = $('#login').val();
+            $.ajax({
+                url: "addUser",
+                type: 'POST',
+                data: {
+                    username: username,
+                    password: password,
+                    login: login
+                },
+                success: function (response) {
+                    alert(response.name + ", you have registered successfully!");
+                },
+                error: function () {
+                    alert("error!");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

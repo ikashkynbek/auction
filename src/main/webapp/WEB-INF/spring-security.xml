@@ -11,6 +11,8 @@
         <sec:intercept-url pattern="/auth" access="permitAll"/>
         <sec:intercept-url pattern="/session" access="permitAll"/>
         <sec:intercept-url pattern="/resources/**" access="permitAll"/>
+        <sec:intercept-url pattern="/userRegister" access="permitAll"/>
+        <sec:intercept-url pattern="/addUser" access="permitAll"/>
         <sec:form-login
                 login-page="/auth"
                 default-target-url="/"
