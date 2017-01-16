@@ -39,6 +39,19 @@ CREATE TABLE USERS (
   created  TIMESTAMP              NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE PRODUCTS (
+  id      SERIAL PRIMARY KEY,
+  name    VARCHAR(500)
+);
+
+CREATE TABLE PRODUCT_PROPERTIES (
+  id              SERIAL PRIMARY KEY,
+  property_name   VARCHAR(500),
+  property_value  VARCHAR(500),
+  product_id      INT             NOT NULL,
+  FOREIGN KEY (product_id) REFERENCES PRODUCTS(id)
+);
+
 CREATE VIEW order_book AS
   SELECT
     leaves_qty bid,

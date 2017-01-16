@@ -86,9 +86,14 @@ auctionApp.controller('newAuction', function ($scope, $http, $uibModal) {
 
     $scope.statuses = [{name:'ACTIVE', text: 'Active'}, {name:'INACTIVE', text: 'Inactive'}];
     $scope.status = $scope.statuses[0];
+
+    $http.get(productListUrl).success(function (response) {
+        $scope.products = response.data;
+        $scope.product = $scope.products[0];
+    })
     
     $scope.createAuction = function () {
-        $scope.auction = { productName: $scope.productName,
+        $scope.auction = { productName: $scope.product.name,
                            startDate: $scope.startDate,
                            endDate: $scope.endDate,
                            status: $scope.status.name };

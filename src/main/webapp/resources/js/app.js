@@ -10,6 +10,9 @@ var principalUrl = context + "/principal";
 var ordersUrl = "/orders";
 var ordersListUrl = ordersUrl + "/list";
 
+var productsUrl = "/products";
+var productListUrl = productsUrl + "/list";
+
 var auctionsPage = staticFilesPath + "/auctions.html";
 var ordersPage = staticFilesPath + "/orders.html";
 var newAuctionPage = staticFilesPath + "/newauction.html";
