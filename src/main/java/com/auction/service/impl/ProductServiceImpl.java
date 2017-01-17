@@ -1,7 +1,6 @@
 package com.auction.service.impl;
 
 import com.auction.model.Product;
-import com.auction.model.ProductProperties;
 import com.auction.service.AbstractService;
 import com.auction.service.ProductService;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,17 +22,17 @@ public class ProductServiceImpl extends AbstractService implements ProductServic
     public List<Product> listProducts() {
         List<Product> products = db.query("SELECT * FROM products", new ProductMapper());
         for (Product currProduct : products) {
-            Map<ProductProperties, String> propertyMap =  getProductProperties(currProduct.getId());
+            Map<String, String> propertyMap =  getProductProperties(currProduct.getId());
             currProduct.setProperties(propertyMap);
         }
         return products;
     }
 
-    private Map<ProductProperties, String> getProductProperties(long productId) {
-        Map<ProductProperties, String> result = new HashMap<>();
+    private Map<String, String> getProductProperties(long productId) {
+        Map<String, String> result = new HashMap<>();
         List<Map<String,Object>> rows = db.queryForList("SELECT * FROM product_properties WHERE product_id="+productId);
         for (Map m : rows) {
-            result.put(ProductProperties.valueOf((String) m.get("property_name")), (String) m.get("property_value"));
+            result.put((String) m.get("property_name"), (String) m.get("property_value"));
         }
         return result;
     }

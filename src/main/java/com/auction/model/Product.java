@@ -9,7 +9,7 @@ public class Product {
 
     private Long id;
     private String name;
-    private Map<ProductProperties, String> properties;
+    private Map<String, String> properties;
 
     public Long getId() {
         return id;
@@ -27,19 +27,19 @@ public class Product {
         this.name = name;
     }
 
-    public void setProperty(ProductProperties property, String propertyVal) {
+    public void setProperty(String property, String propertyVal) {
         this.properties.put(property, propertyVal);
     }
 
-    public String getProperty(ProductProperties property) {
+    public String getProperty(String property) {
         return this.properties.get(property);
     }
 
-    public Map<ProductProperties, String> getProperties() {
+    public Map<String, String> getProperties() {
         return properties;
     }
 
-    public void setProperties(Map<ProductProperties, String> properties) {
+    public void setProperties(Map<String, String> properties) {
         this.properties = properties;
     }
 }
