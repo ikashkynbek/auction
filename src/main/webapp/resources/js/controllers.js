@@ -135,5 +135,14 @@ auctionApp.controller('newAuctionModalController', function ($scope, $uibModalIn
     $scope.ok = function () {
         $uibModalInstance.close();
     };
+});
 
+auctionApp.controller('product', function ($scope, $http) {
+    $http.get(productListUrl).success(function (response) {
+        $scope.products = response.data;
+    })
+    
+    $scope.getProperties = function (properties) {
+        return Object.keys(properties);
+    }
 });

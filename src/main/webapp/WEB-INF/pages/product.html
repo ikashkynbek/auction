@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product add, edit page</title>
+</head>
+<body>
+    <div>
+        <a class="btn btn-default navbar-btn" href="/newproduct">New Product</a>
+    </div>
+    <uib-accordion close-others="true">
+        <div ng-repeat="product in products">
+            <div uib-accordion-group class="panel-default" heading="{{product.name}}">
+                <table class="table">
+                    <tr ng-repeat="key in getProperties(product.properties)">
+                        <td>{{key}}:</td><td>{{product.properties[key]}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </uib-accordion>
+</body>
+</html>

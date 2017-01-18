@@ -73,4 +73,10 @@ public class MainController {
         return user;
     }
 
+    @RequestMapping(value = "/products",  method = RequestMethod.GET)
+    public String productPage() { return "/pages/product.html"; }
+
+    @RequestMapping(value = "/newproduct",  method = RequestMethod.GET)
+    public String newProduct() { return "/pages/newproduct.html"; }
+
 }
