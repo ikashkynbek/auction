@@ -146,3 +146,39 @@ auctionApp.controller('product', function ($scope, $http) {
         return Object.keys(properties);
     }
 });
+
+auctionApp.controller('newproduct', function ($scope, $http) {
+    $scope.product = {name : $scope.productName,
+                        properties: {}};
+
+    $scope.propertyCount = Object.keys($scope.product.properties);
+
+    $scope.addProperty = function () {
+        $scope.product.name = $scope.productName;
+        $scope.product.properties[$scope.propertyName] = $scope.propertyValue;
+        $scope.propertyCount = Object.keys($scope.product.properties);
+        $scope.propertyName = null;
+        $scope.propertyValue = null;
+    }
+    
+    $scope.createProduct = function () {
+        $http.post(
+            "/products/newProduct", $scope.product
+        ).success(function () {
+            console.log("New product created successfully");
+            alert("New product created successfully");
+            $scope.clearForm();
+        }).error(function () {
+            console.log("Error creating new product");
+            alert("Error creating new product");
+        });
+    }
+
+    $scope.clearForm = function () {
+        $scope.productName = null;
+        $scope.propertyName = null;
+        $scope.propertyValue = null;
+        $scope.product.properties = {};
+        $scope.propertyCount = Object.keys($scope.product.properties);
+    }
+});

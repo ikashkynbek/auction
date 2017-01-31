@@ -4,8 +4,11 @@ import com.auction.model.Product;
 import com.auction.service.AbstractService;
 import com.auction.service.ProductService;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -26,6 +29,24 @@ public class ProductServiceImpl extends AbstractService implements ProductServic
             currProduct.setProperties(propertyMap);
         }
         return products;
+    }
+
+    @Override
+    public Long createProduct(Product product) {
+        String insert = "INSERT INTO PRODUCTS(name) VALUES (?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        db.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(insert, new String[]{"id"});
+            ps.setString(1, product.getName());
+            return ps;
+        }, keyHolder);
+        long productID = keyHolder.getKey().longValue();
+
+        String insertProp = "INSERT INTO product_properties (property_name, property_value, product_id) VALUES (?, ?, ?)";
+        for (Map.Entry<String, String> entry : product.getProperties().entrySet()) {
+            db.update(insertProp, entry.getKey(), entry.getValue(), productID);
+        }
+        return productID;
     }
 
     private Map<String, String> getProductProperties(long productId) {

@@ -39,8 +39,8 @@ auctionApp.config(function ($routeProvider, $httpProvider, $locationProvider) {
         templateUrl: productPage,
         controller: 'product'
     }).when('/newproduct', {
-        templateUrl: newProductPage
-        //controller: 'product'
+        templateUrl: newProductPage,
+        controller: 'newproduct'
     }).otherwise('/');
 
     $locationProvider.html5Mode(true);

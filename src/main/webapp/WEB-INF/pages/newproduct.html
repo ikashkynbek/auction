@@ -15,20 +15,27 @@
         <td></td>
         <td></td>
     </tr>
+    <tr ng-repeat="key in propertyCount">
+        <td>Property:</td>
+        <td>{{key}}</td>
+        <td>Value:</td>
+        <td>{{product.properties[key]}}</td>
+    </tr>
     <tr>
         <td>Property:</td>
         <td><input ng-model="propertyName"></td>
         <td>Value:</td>
-        <td><input ng-model="propertyName"></td>
+        <td><input ng-model="propertyValue"></td>
     </tr>
     <tr>
+        <td></td>
         <td>
-        </td>
-        <td colspan="2">
-            <a class="btn btn-default navbar-btn" ng-click="">Create product</a>
+            <a class="btn btn-default" ng-click="addProperty()">Add a new property</a>
         </td>
         <td>
+            <a class="btn btn-default" ng-click="createProduct()">Create product</a>
         </td>
+        <td></td>
     </tr>
     </tbody>
 </table>
