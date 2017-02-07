@@ -4,9 +4,8 @@ import com.auction.model.DefaultResponse;
 import com.auction.model.Role;
 import com.auction.service.AuctionService;
 import com.auction.utils.gson.GsonHelper;
-import com.google.gson.JsonParseException;
-import com.google.gson.stream.MalformedJsonException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -72,20 +71,16 @@ public class BaseRest {
             out = response.getWriter();
 
             if (ex instanceof IllegalStateException ||
-                    ex instanceof MalformedJsonException ||
-                    ex instanceof JsonParseException ||
-                    ex instanceof IllegalArgumentException ||
-                    ex instanceof IndexOutOfBoundsException ||
-                    ex instanceof ClassCastException) {
+                    ex instanceof IllegalArgumentException) {
                 jsonResponse = new DefaultResponse(ex.getMessage());
                 errorJson = jsonResponse.toJson();
                 code = HttpStatus.BAD_REQUEST.value();
-            } else if (ex instanceof NullPointerException) {
-                jsonResponse = new DefaultResponse(ex.getMessage());
+            } else if (ex instanceof DuplicateKeyException) {
+                jsonResponse = new DefaultResponse("already exists");
                 errorJson = jsonResponse.toJson();
-                code = HttpStatus.NOT_FOUND.value();
+                code = HttpStatus.INTERNAL_SERVER_ERROR.value();
             } else {
-                jsonResponse = new DefaultResponse(ex.getMessage());
+                jsonResponse = new DefaultResponse("Internal server error");
                 errorJson = jsonResponse.toJson();
                 code = HttpStatus.INTERNAL_SERVER_ERROR.value();
             }

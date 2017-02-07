@@ -70,3 +70,25 @@ CREATE VIEW order_book AS
   WHERE type = 'OFFER' AND STATUS IN ('CREATED', 'PARTIALLY_FILLED') AND quotes.auction_id=1
 
   ORDER BY price DESC;
+
+CREATE VIEW auction_details AS
+  SELECT
+    a.product_name AS product_name,
+    o.orders       AS orders_count,
+    o.max          AS order_max,
+    o.min          AS order_min,
+    q.min          AS best_offer
+  FROM auctions a
+    LEFT JOIN (SELECT
+                 o2.auction_id,
+                 max(price) AS max,
+                 min(price) AS min,
+                 count(*)   AS orders
+               FROM orders o2
+               GROUP BY o2.auction_id) o ON a.id = o.auction_id
+    LEFT JOIN (SELECT
+                 q2.auction_id,
+                 min(price) AS min
+               FROM quotes q2
+               WHERE q2.type = 'OFFER' AND q2.status IN ('CREATED', 'PARTIALLY_FILLED')
+               GROUP BY q2.auction_id) q ON a.id = q.auction_id;

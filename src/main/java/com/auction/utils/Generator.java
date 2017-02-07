@@ -7,7 +7,6 @@ import com.auction.model.QuoteType;
 import com.auction.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -45,7 +44,7 @@ public class Generator {
         }
     }
 
-    @Scheduled(fixedDelay=60000)
+//    @Scheduled(fixedDelay=10000)
     public void generateQuotes() {
         for (Auction auction : auctionService.listAuctions()) {
             Quote quote = generateQuote(auction.getId());

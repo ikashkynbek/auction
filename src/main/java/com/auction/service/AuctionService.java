@@ -19,11 +19,14 @@ package com.auction.service;
 import com.auction.model.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AuctionService {
 
 	List<Auction> listAuctions();
-	
+
+	List<Map<String, Object>> auctionDetails();
+
 	Auction getAuction(String productName);
 
 	Long createAuction(Auction auction);

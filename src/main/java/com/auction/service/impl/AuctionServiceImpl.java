@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AuctionServiceImpl extends AbstractService implements AuctionService {
@@ -19,6 +20,11 @@ public class AuctionServiceImpl extends AbstractService implements AuctionServic
     @Override
     public List<Auction> listAuctions() {
         return db.query("SELECT * FROM auctions", new AuctionMapper());
+    }
+
+    @Override
+    public List<Map<String, Object>> auctionDetails() {
+        return db.queryForList("SELECT * FROM auction_details");
     }
 
     @Override
